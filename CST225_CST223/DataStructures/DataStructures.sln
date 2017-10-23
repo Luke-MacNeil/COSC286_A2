@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructuresCommon", "DataStructuresCommon\DataStructuresCommon.csproj", "{000FD293-0F40-4874-BB5A-BE8763CE2985}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkedList", "LinkedList\LinkedList.csproj", "{A498679C-80DF-4F0D-93FB-FD9307CB65E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinarySearchTree", "BinarySearchTree\BinarySearchTree.csproj", "{C561FED6-6BEE-46B2-8889-C2E8064D7CDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{000FD293-0F40-4874-BB5A-BE8763CE2985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000FD293-0F40-4874-BB5A-BE8763CE2985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000FD293-0F40-4874-BB5A-BE8763CE2985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000FD293-0F40-4874-BB5A-BE8763CE2985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A498679C-80DF-4F0D-93FB-FD9307CB65E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A498679C-80DF-4F0D-93FB-FD9307CB65E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A498679C-80DF-4F0D-93FB-FD9307CB65E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A498679C-80DF-4F0D-93FB-FD9307CB65E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C561FED6-6BEE-46B2-8889-C2E8064D7CDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C561FED6-6BEE-46B2-8889-C2E8064D7CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C561FED6-6BEE-46B2-8889-C2E8064D7CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C561FED6-6BEE-46B2-8889-C2E8064D7CDB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
