@@ -19,7 +19,7 @@ namespace HashTables
         public override void Add(K key, V vValue)
         {
             // How many attepmts were made to increment
-            int iAttempt = 1;
+            //int iAttempt = 1;
 
             // Get the initial hash of the key
             int iInitialHash = HashFunction(key);
@@ -37,16 +37,15 @@ namespace HashTables
 
             if (oDataArray[iCurrentLocation] == null)
             {
-                bst = new BinarySearchTree.BST<KeyValue<K, V>>();
+                bst = new BST<KeyValue<K, V>>();
             }
 
-            // this comment is my only change
-
-            bst.Add(kvNew);
-
-
-
-
+            // Call find on the bst to see if the data we are adding already exists.
+            // We do not want to add duplicate data.
+            if(bst.Find(kvNew).Value.CompareTo(vValue) != 0)
+            {
+                bst.Add(kvNew);
+            }
         }
 
         private void ExpandHashTable()
@@ -88,7 +87,7 @@ namespace HashTables
             int iCurrentLocation = iInitialHash;
 
             // How many attempts were made to increment
-            int iAttempts = 1;
+            //int iAttempts = 1;
 
             BST<KeyValue<K, V>> bst = oDataArray[iCurrentLocation];
 
@@ -111,7 +110,7 @@ namespace HashTables
             int iCurrentLocation = iInitialHash;
 
             // How many attempts were made to increment
-            int iAttempts = 1;
+            //int iAttempts = 1;
 
             // Indicator that the item was found
             Boolean found = false;
@@ -172,26 +171,5 @@ namespace HashTables
             }
             return sb.ToString();
         }
-
-
-
-        IEnumerator<T> myEnum = GetEnumerator();
-        myEnum.Reset();
-
-            StringBuilder result = new StringBuilder("[");
-
-            foreach(T item in this)
-            {
-                result.Append(item + ", ");
-            }
-
-            if(Count > 0)
-            {
-                result.Remove((result.Length - 2), (2));
-            }
-
-result.Append("]");
-
-            return result.ToString();
     }
 }
