@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BinarySearchTree;
 
 namespace HashTables
 {
@@ -32,16 +33,18 @@ namespace HashTables
             // Position to add the new element
             int iPositionToAdd = -1;
 
-            BinarySearchTree.BST<KeyValue<K, V>> bst = null;
+            BST<KeyValue<K, V>> bst = null;
 
-            if(oDataArray[iCurrentLocation] == null)
+            if (oDataArray[iCurrentLocation] == null)
             {
-                bst = new BinarySearchTree.BST<KeyValue<K,V>>();
+                bst = new BinarySearchTree.BST<KeyValue<K, V>>();
             }
 
-            // test
+            // this comment is my only change
 
-            bst.Add(vValue);
+            bst.Add(kvNew);
+
+
 
 
         }
@@ -75,9 +78,22 @@ namespace HashTables
             }
         }
 
-        public override V Get(K key)
+        // changed get to take in a KeyValue object so we can track both the key and data of what to find
+        public override V Get(KeyValue<K, V> keyValue)
         {
-            throw new NotImplementedException();
+            // Get the hashcode
+            int iInitialHash = HashFunction(keyValue.Key);
+
+            // Current location we are looking at in the collision chain
+            int iCurrentLocation = iInitialHash;
+
+            // How many attempts were made to increment
+            int iAttempts = 1;
+
+            BST<KeyValue<K, V>> bst = oDataArray[iCurrentLocation];
+
+            // call find in BST and just return the value of the KeyValue object returned
+            return bst.Find(keyValue).Value;
         }
 
         public override IEnumerator<V> GetEnumerator()
@@ -85,16 +101,97 @@ namespace HashTables
             throw new NotImplementedException();
         }
 
-        public override void Remove(K key)
+        // changed remove to take in a KeyValue object so we can track both the key and data of what to remove
+        public override void Remove(KeyValue<K, V> keyValue)
         {
-            throw new NotImplementedException();
+            // Get the hashcode (the key of the object passed in)
+            int iInitialHash = HashFunction(keyValue.Key);
+
+            // Current location we are looking at in the collision chain
+            int iCurrentLocation = iInitialHash;
+
+            // How many attempts were made to increment
+            int iAttempts = 1;
+
+            // Indicator that the item was found
+            Boolean found = false;
+
+
+            // planning on having this loop through every node in the bst, to try and remove the node
+            BST<KeyValue<K, V>> currBst = oDataArray[iCurrentLocation];
+
+            while (!found && currBst.Left != null)
+            {
+
+            }
         }
 
         public override string ToString()
         {
-            return base.ToString();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < oDataArray.Length; i++)
+            {
+                sb.Append("Bucket " + i + ": ");
+                if (oDataArray[i] != null)
+                {
+                    // If the current location contains a BST
+                    if (oDataArray[i].GetType() == typeof(BST<KeyValue<K, V>>))
+                    {
+
+                        // Don't look at this, just messing around trying to work out ToString()
+
+                        BST<KeyValue<K, V>> bstKV = (BST<KeyValue<K, V>>)oDataArray[i];
+
+                        IEnumerator<KeyValue<K, V>> myEnum = GetEnumerator();
+                        myEnum.Reset();
+
+                        sb.Append(bstKV.ToString() + " IH = " + HashFunction(keyValue.Key) + "[");
+
+                        foreach (V item in this)
+                        {
+                            result.Append(item + ", ");
+                        }
+
+                        if (Count > 0)
+                        {
+                            result.Remove((result.Length - 2), (2));
+                        }
+
+                        result.Append("]");
+
+                        return result.ToString();
+
+                        sb.Append(bstKV.ToString() + " IH = " + HashFunction(keyValue.Key));
+                    }
+                    else // it is a tombstone
+                    {
+                        sb.Append("Tombstone");
+                    }
+                }
+                sb.Append("\n");
+            }
+            return sb.ToString();
         }
 
 
+
+        IEnumerator<T> myEnum = GetEnumerator();
+        myEnum.Reset();
+
+            StringBuilder result = new StringBuilder("[");
+
+            foreach(T item in this)
+            {
+                result.Append(item + ", ");
+            }
+
+            if(Count > 0)
+            {
+                result.Remove((result.Length - 2), (2));
+            }
+
+result.Append("]");
+
+            return result.ToString();
     }
 }
