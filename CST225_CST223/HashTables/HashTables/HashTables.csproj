@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BinarySearchTree">
-      <HintPath>D:\virpc\Visual Studio Stuff\CST225_CST223\HashTables\HashTables\bin\Debug\BinarySearchTree.dll</HintPath>
+      <HintPath>..\..\DataStructures\BinarySearchTree\bin\Debug\BinarySearchTree.dll</HintPath>
     </Reference>
     <Reference Include="DataStructuresCommon">
       <HintPath>D:\virpc\Visual Studio Stuff\DataStructures\BinarySearchTree\bin\Debug\DataStructuresCommon.dll</HintPath>
