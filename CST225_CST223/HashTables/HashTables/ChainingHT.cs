@@ -11,6 +11,8 @@ namespace HashTables
         where K : IComparable<K>
         where V : IComparable<V>
     {
+        private Queue<KeyValue<K, V>> qNodes = null;
+
         public ChainingHT()
         {
             oDataArray = new object[5];
@@ -31,7 +33,7 @@ namespace HashTables
             KeyValue<K, V> kvNew = new KeyValue<K, V>(key, vValue);
 
             // Position to add the new element
-            int iPositionToAdd = -1;
+            //int iPositionToAdd = -1;
 
             BST<KeyValue<K, V>> bst = null;
 
@@ -77,11 +79,23 @@ namespace HashTables
             }
         }
 
-        // changed get to take in a KeyValue object so we can track both the key and data of what to find
-        public override V Get(KeyValue<K, V> keyValue)
+        protected void IterateTree(BST<KeyValue<K,V>> bst)
         {
+            qNodes = null;
+            bst.Iterate(getValue, TRAVERSALORDER.PRE_ORDER);
+        }
+
+        protected void getValue(KeyValue<K,V> nCurrent)
+        {
+            qNodes.Enqueue(nCurrent);
+        }
+
+        public override V Get(K key)
+        {
+            V result = default(V);
+
             // Get the hashcode
-            int iInitialHash = HashFunction(keyValue.Key);
+            int iInitialHash = HashFunction(key);
 
             // Current location we are looking at in the collision chain
             int iCurrentLocation = iInitialHash;
@@ -89,10 +103,23 @@ namespace HashTables
             // How many attempts were made to increment
             //int iAttempts = 1;
 
-            BST<KeyValue<K, V>> bst = oDataArray[iCurrentLocation];
+            BST<KeyValue<K, V>> bst = (BST<KeyValue<K,V>>) oDataArray[iCurrentLocation];
 
-            // call find in BST and just return the value of the KeyValue object returned
-            return bst.Find(keyValue).Value;
+            qNodes = null;
+
+            bst.Iterate(getValue, TRAVERSALORDER.PRE_ORDER);
+
+            for(int i = 0; i < qNodes.Count; i++)
+            {
+                KeyValue<K, V> current = qNodes.Dequeue();
+
+                if(current.Key.CompareTo(key) == 0)
+                {
+                    result = current.Value;
+                }
+            }
+
+            return result;
         }
 
         public override IEnumerator<V> GetEnumerator()
@@ -100,11 +127,10 @@ namespace HashTables
             throw new NotImplementedException();
         }
 
-        // changed remove to take in a KeyValue object so we can track both the key and data of what to remove
-        public override void Remove(KeyValue<K, V> keyValue)
+        public override void Remove(K key)
         {
             // Get the hashcode (the key of the object passed in)
-            int iInitialHash = HashFunction(keyValue.Key);
+            int iInitialHash = HashFunction(key);
 
             // Current location we are looking at in the collision chain
             int iCurrentLocation = iInitialHash;
@@ -112,64 +138,117 @@ namespace HashTables
             // How many attempts were made to increment
             //int iAttempts = 1;
 
-            // Indicator that the item was found
-            Boolean found = false;
-
-
             // planning on having this loop through every node in the bst, to try and remove the node
-            BST<KeyValue<K, V>> currBst = oDataArray[iCurrentLocation];
+            BST<KeyValue<K, V>> bst = (BST<KeyValue<K, V>>)oDataArray[iCurrentLocation];
 
-            while (!found && currBst.Left != null)
-            {
+            V value =  this.Get(key);
 
-            }
+            KeyValue<K, V> kvNew = new KeyValue<K, V>(key, value);
+
+            bst.Remove(kvNew);
         }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < oDataArray.Length; i++)
+            object[] currDataArray = oDataArray;
+
+            StringBuilder result = new StringBuilder("[");
+
+            for(int i = 0; i < currDataArray.Length; i++)
             {
-                sb.Append("Bucket " + i + ": ");
-                if (oDataArray[i] != null)
+                IterateTree((BST<KeyValue<K,V>>) currDataArray[i]);
+
+                if (currDataArray[i] != null)
                 {
-                    // If the current location contains a BST
-                    if (oDataArray[i].GetType() == typeof(BST<KeyValue<K, V>>))
-                    {
-
-                        // Don't look at this, just messing around trying to work out ToString()
-
-                        BST<KeyValue<K, V>> bstKV = (BST<KeyValue<K, V>>)oDataArray[i];
-
-                        IEnumerator<KeyValue<K, V>> myEnum = GetEnumerator();
-                        myEnum.Reset();
-
-                        sb.Append(bstKV.ToString() + " IH = " + HashFunction(keyValue.Key) + "[");
-
-                        foreach (V item in this)
-                        {
-                            result.Append(item + ", ");
-                        }
-
-                        if (Count > 0)
-                        {
-                            result.Remove((result.Length - 2), (2));
-                        }
-
-                        result.Append("]");
-
-                        return result.ToString();
-
-                        sb.Append(bstKV.ToString() + " IH = " + HashFunction(keyValue.Key));
-                    }
-                    else // it is a tombstone
-                    {
-                        sb.Append("Tombstone");
-                    }
+                    result.Append(qNodes.Dequeue() + ", ");
                 }
-                sb.Append("\n");
+                else if(currDataArray[i] == new Tombstone())
+                {
+                    result.Append("Tombstone\n");
+                }
+                else
+                {
+                    result.Append("null\n");
+                }
+
+                result.Append("]\n");
             }
-            return sb.ToString();
+
+
+
+            //IEnumerator<T> myEnum = GetEnumerator();
+            //myEnum.Reset();
+
+            //StringBuilder result = new StringBuilder("[");
+
+            //foreach (T item in this)
+            //{
+            //    result.Append(item + ", ");
+            //}
+
+            //if (Count > 0)
+            //{
+            //    result.Remove((result.Length - 2), (2));
+            //}
+
+            //result.Append("]");
+
+
+
+
+
+
+            //object[] currDataArray = oDataArray;
+
+            //StringBuilder sb = new StringBuilder("[");
+            //for (int i = 0; i < currDataArray.Length; i++)
+            //{
+            //    sb.Append("Bucket " + i + ": ");
+            //    if (oDataArray[i] != null)
+            //    {
+            //        // If the current location contains a key-value
+            //        if (oDataArray[i].GetType() == typeof(BST<KeyValue<K, V>>))
+            //        {
+            //            BST<KeyValue<K, V>> bst = (BST<KeyValue<K, V>>)oDataArray[i];
+            //            sb.Append(bst.Value.ToString() + " IH = " + HashFunction(bst.Key));
+            //        }
+            //        else // it is a tombstone
+            //        {
+            //            sb.Append("Tombstone");
+            //        }
+            //    }
+            //    sb.Append("\n");
+            //}
+
+
+
+            //StringBuilder sb = new StringBuilder();
+            //for (int i = 0; i < oDataArray.Length; i++)
+            //{
+            //    sb.Append("Bucket " + i + ": ");
+            //    if (oDataArray[i] != null)
+            //    {
+            //        // If the current location contains a key-value
+            //        if (oDataArray[i].GetType() == typeof(KeyValue<K, V>))
+            //        {
+            //            KeyValue<K, V> kv = (KeyValue<K, V>)oDataArray[i];
+            //            sb.Append(kv.Value.ToString() + " IH = " + HashFunction(kv.Key));
+            //        }
+            //        else // it is a tombstone
+            //        {
+            //            sb.Append("Tombstone");
+            //        }
+            //    }
+            //    sb.Append("\n");
+            //}
+            //return sb.ToString();
+
+
+
+
+
+
+            return result.ToString();
         }
     }
 }
