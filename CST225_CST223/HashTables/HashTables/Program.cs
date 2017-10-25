@@ -128,9 +128,10 @@ namespace HashTables
             //TestHT(quad);
             //TestHT(dh);
 
+            ChainingHT<int, string> cht = new ChainingHT<int, string>();
 
-
-
+            TestAdd(cht);
+            Console.WriteLine(cht.ToString());
 
 
 
