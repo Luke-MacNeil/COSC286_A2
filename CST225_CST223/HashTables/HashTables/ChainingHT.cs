@@ -11,7 +11,7 @@ namespace HashTables
         where K : IComparable<K>
         where V : IComparable<V>
     {
-        private Queue<KeyValue<K, V>> qNodes = null;
+        private Queue<KeyValue<K, V>> qNodes = new Queue<KeyValue<K, V>>();
 
         public ChainingHT()
         {
@@ -96,7 +96,7 @@ namespace HashTables
 
         protected void IterateTree(BST<KeyValue<K,V>> bst)
         {
-            qNodes = null;
+            qNodes = new Queue<KeyValue<K, V>>();
             bst.Iterate(getValue, TRAVERSALORDER.PRE_ORDER);
         }
 
@@ -120,7 +120,7 @@ namespace HashTables
 
             BST<KeyValue<K, V>> bst = (BST<KeyValue<K,V>>) oDataArray[iCurrentLocation];
 
-            qNodes = null;
+            qNodes = new Queue<KeyValue<K, V>>();
 
             IterateTree(bst);
 
