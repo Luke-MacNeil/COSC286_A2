@@ -137,7 +137,46 @@ namespace BinarySearchTree
 
         public override T Find(T data)
         {
-            throw new NotImplementedException();
+            Boolean found = false;
+
+            if (nRoot != null)
+            {
+                return RecFind(nRoot, data, ref found);
+            }
+            else
+            {
+                throw new ApplicationException("Root is null");
+            }
+        }
+
+        private T RecFind(Node<T> nCurrent, T data, ref Boolean found)
+        {
+            T findMe = default(T);
+
+            if (nCurrent != null)
+            {
+                // Find item
+                int compare = data.CompareTo(nCurrent.Data);
+
+                // if data item to remove is smaller than the current data
+                if (compare < 0)
+                {
+                    nCurrent.Left = RecRemove(nCurrent.Left, data, ref found);
+                }
+                else if (compare > 0)
+                {
+                    nCurrent.Right = RecRemove(nCurrent.Right, data, ref found);
+                }
+                else // else we are on the item
+                {
+                    // Indicate that we found it
+                    found = true;
+
+                    findMe = nCurrent.Data;
+                }
+            }
+
+            return findMe;
         }
 
         public override IEnumerator<T> GetEnumerator()

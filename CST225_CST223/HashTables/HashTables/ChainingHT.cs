@@ -31,7 +31,7 @@ namespace HashTables
             KeyValue<K, V> kvNew = new KeyValue<K, V>(key, vValue);
 
             // Position to add the new element
-            int iPositionToAdd = -1;
+            //int iPositionToAdd = -1;
 
             BST<KeyValue<K, V>> bst = null;
 
@@ -77,11 +77,10 @@ namespace HashTables
             }
         }
 
-        // changed get to take in a KeyValue object so we can track both the key and data of what to find
-        public override V Get(KeyValue<K, V> keyValue)
+        public override V Get(K key)
         {
             // Get the hashcode
-            int iInitialHash = HashFunction(keyValue.Key);
+            int iInitialHash = HashFunction(key);
 
             // Current location we are looking at in the collision chain
             int iCurrentLocation = iInitialHash;
@@ -89,10 +88,11 @@ namespace HashTables
             // How many attempts were made to increment
             //int iAttempts = 1;
 
-            BST<KeyValue<K, V>> bst = oDataArray[iCurrentLocation];
+            KeyValue<K, V> kvNew = new KeyValue<K, V>(key, default(V));
+            BST<KeyValue<K, V>> bst = (BST<KeyValue<K,V>>) oDataArray[iCurrentLocation];
 
             // call find in BST and just return the value of the KeyValue object returned
-            return bst.Find(keyValue).Value;
+            return bst.Find(kvNew).Value;
         }
 
         public override IEnumerator<V> GetEnumerator()
@@ -100,11 +100,10 @@ namespace HashTables
             throw new NotImplementedException();
         }
 
-        // changed remove to take in a KeyValue object so we can track both the key and data of what to remove
-        public override void Remove(KeyValue<K, V> keyValue)
+        public override void Remove(K key)
         {
             // Get the hashcode (the key of the object passed in)
-            int iInitialHash = HashFunction(keyValue.Key);
+            int iInitialHash = HashFunction(key);
 
             // Current location we are looking at in the collision chain
             int iCurrentLocation = iInitialHash;
@@ -117,7 +116,7 @@ namespace HashTables
 
 
             // planning on having this loop through every node in the bst, to try and remove the node
-            BST<KeyValue<K, V>> currBst = oDataArray[iCurrentLocation];
+            BST<KeyValue<K, V>> currBst = (BST<KeyValue<K, V>>)oDataArray[iCurrentLocation];
 
             while (!found && currBst.Left != null)
             {
