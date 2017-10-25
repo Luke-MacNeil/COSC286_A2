@@ -37,17 +37,32 @@ namespace HashTables
 
             BST<KeyValue<K, V>> bst = null;
 
-            if (oDataArray[iCurrentLocation] == null)
+            if(oDataArray[iCurrentLocation] == null)
             {
                 bst = new BST<KeyValue<K, V>>();
+                oDataArray[iCurrentLocation] = new BST<KeyValue<K, V>>();
             }
 
             // Call find on the bst to see if the data we are adding already exists.
             // We do not want to add duplicate data.
-            if(bst.Find(kvNew).Value.CompareTo(vValue) != 0)
+
+            IterateTree(bst);
+
+            while(qNodes.Count > 0)
             {
-                bst.Add(kvNew);
+                //qNodes.Dequeue().Value
+                V current = qNodes.Dequeue().Value;
+                
+                if(current.CompareTo(vValue) != 0)
+                {
+                    bst.Add(kvNew);
+                }
             }
+
+            //if(bst.Find(kvNew).Value.CompareTo(vValue) != 0)
+            //{
+            //    bst.Add(kvNew);
+            //}
         }
 
         private void ExpandHashTable()
