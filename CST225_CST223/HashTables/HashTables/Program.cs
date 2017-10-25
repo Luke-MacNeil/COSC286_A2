@@ -9,6 +9,30 @@ namespace HashTables
 {
     class Program
     {
+        //public void TestChainingHT()
+        //{
+        //    //Test the AVL Tree
+        //    long start;
+        //    long end;
+        //    AVLT<int> balanceTree = new AVLT<int>();
+        //    //BST<int> balanceTree = new BST<int>();
+        //    start = Environment.TickCount;
+        //    Random randomNumber = new Random((int)start);
+        //    int iMax = 10000;
+        //    int iLargest = iMax * 10;
+
+        //    for (int i = 0; i < iMax; i++)
+        //    {
+        //        balanceTree.Add(randomNumber.Next(1, iLargest));
+        //    }
+        //    end = Environment.TickCount;
+
+        //    Console.WriteLine("Time to add: " + (end - start).ToString() + " ms");
+        //    Console.WriteLine("Theoretical Minimum Height: " + Math.Truncate(Math.Log(iMax, 2.0)));
+        //    Console.WriteLine("Actual Height: " + balanceTree.Height());
+        //}
+
+
         static void TestAdd(A_HashTable<int, string> ht)
         {
             ht.Add(11, "Rob");
@@ -96,13 +120,13 @@ namespace HashTables
 
         static void Main(string[] args)
         {
-            Linear<Person, Person> linear = new Linear<Person, Person>();
-            Quadratic<Person, Person> quad = new Quadratic<Person, Person>();
-            DoubleHash<Person, Person> dh = new DoubleHash<Person, Person>();
+            //Linear<Person, Person> linear = new Linear<Person, Person>();
+            //Quadratic<Person, Person> quad = new Quadratic<Person, Person>();
+            //DoubleHash<Person, Person> dh = new DoubleHash<Person, Person>();
 
-            TestHT(linear);
-            TestHT(quad);
-            TestHT(dh);
+            //TestHT(linear);
+            //TestHT(quad);
+            //TestHT(dh);
 
 
 

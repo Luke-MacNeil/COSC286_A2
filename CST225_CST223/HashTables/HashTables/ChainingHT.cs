@@ -107,7 +107,7 @@ namespace HashTables
 
             qNodes = null;
 
-            bst.Iterate(getValue, TRAVERSALORDER.PRE_ORDER);
+            IterateTree(bst);
 
             for(int i = 0; i < qNodes.Count; i++)
             {
@@ -145,14 +145,19 @@ namespace HashTables
 
             KeyValue<K, V> kvNew = new KeyValue<K, V>(key, value);
 
-            bst.Remove(kvNew);
+            IterateTree(bst);
+
+            if (qNodes.Count == 1 && bst.Remove(kvNew))
+            {
+                oDataArray[iCurrentLocation] = new Tombstone();
+            }
         }
 
         public override string ToString()
         {
             object[] currDataArray = oDataArray;
 
-            StringBuilder result = new StringBuilder("[");
+            StringBuilder result = new StringBuilder();
 
             for(int i = 0; i < currDataArray.Length; i++)
             {
@@ -160,7 +165,12 @@ namespace HashTables
 
                 if (currDataArray[i] != null)
                 {
-                    result.Append(qNodes.Dequeue() + ", ");
+                    result.Append("[");
+                    while(qNodes.Count > 0)
+                    {
+                        result.Append(qNodes.Dequeue() + ", ");
+                    }
+                    result.Append("]\n");
                 }
                 else if(currDataArray[i] == new Tombstone())
                 {
@@ -170,83 +180,7 @@ namespace HashTables
                 {
                     result.Append("null\n");
                 }
-
-                result.Append("]\n");
             }
-
-
-
-            //IEnumerator<T> myEnum = GetEnumerator();
-            //myEnum.Reset();
-
-            //StringBuilder result = new StringBuilder("[");
-
-            //foreach (T item in this)
-            //{
-            //    result.Append(item + ", ");
-            //}
-
-            //if (Count > 0)
-            //{
-            //    result.Remove((result.Length - 2), (2));
-            //}
-
-            //result.Append("]");
-
-
-
-
-
-
-            //object[] currDataArray = oDataArray;
-
-            //StringBuilder sb = new StringBuilder("[");
-            //for (int i = 0; i < currDataArray.Length; i++)
-            //{
-            //    sb.Append("Bucket " + i + ": ");
-            //    if (oDataArray[i] != null)
-            //    {
-            //        // If the current location contains a key-value
-            //        if (oDataArray[i].GetType() == typeof(BST<KeyValue<K, V>>))
-            //        {
-            //            BST<KeyValue<K, V>> bst = (BST<KeyValue<K, V>>)oDataArray[i];
-            //            sb.Append(bst.Value.ToString() + " IH = " + HashFunction(bst.Key));
-            //        }
-            //        else // it is a tombstone
-            //        {
-            //            sb.Append("Tombstone");
-            //        }
-            //    }
-            //    sb.Append("\n");
-            //}
-
-
-
-            //StringBuilder sb = new StringBuilder();
-            //for (int i = 0; i < oDataArray.Length; i++)
-            //{
-            //    sb.Append("Bucket " + i + ": ");
-            //    if (oDataArray[i] != null)
-            //    {
-            //        // If the current location contains a key-value
-            //        if (oDataArray[i].GetType() == typeof(KeyValue<K, V>))
-            //        {
-            //            KeyValue<K, V> kv = (KeyValue<K, V>)oDataArray[i];
-            //            sb.Append(kv.Value.ToString() + " IH = " + HashFunction(kv.Key));
-            //        }
-            //        else // it is a tombstone
-            //        {
-            //            sb.Append("Tombstone");
-            //        }
-            //    }
-            //    sb.Append("\n");
-            //}
-            //return sb.ToString();
-
-
-
-
-
 
             return result.ToString();
         }

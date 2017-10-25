@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTables
 {
-    public class KeyValue<K,V>
+    public class KeyValue<K,V> : IComparable<KeyValue<K,V>>
         where K : IComparable<K>
         where V : IComparable<V>
     {
@@ -37,6 +37,10 @@ namespace HashTables
             }
         }
 
+        public int CompareTo(KeyValue<K, V> other)
+        {
+            return this.Key.CompareTo(other.Key);
+        }
 
         public override bool Equals(object obj)
         {
