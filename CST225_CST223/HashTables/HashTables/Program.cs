@@ -37,6 +37,11 @@ namespace HashTables
         {
             ht.Add(11, "Rob");
             ht.Add(15, "Grace");
+            ht.Add(15, "John");
+            ht.Add(20, "Luke");
+            ht.Add(25, "Cuong");
+            ht.Add(26, "Jaryd");
+            ht.Add(9, "Austin");
             //ht.Add(17, "Bryce");
         }
 

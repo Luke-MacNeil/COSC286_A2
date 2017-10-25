@@ -37,32 +37,31 @@ namespace HashTables
 
             BST<KeyValue<K, V>> bst = null;
 
-            if(oDataArray[iCurrentLocation] == null)
+            if (oDataArray[iCurrentLocation] != null)
             {
-                bst = new BST<KeyValue<K, V>>();
-                oDataArray[iCurrentLocation] = new BST<KeyValue<K, V>>();
-            }
-
-            // Call find on the bst to see if the data we are adding already exists.
-            // We do not want to add duplicate data.
-
-            IterateTree(bst);
-
-            while(qNodes.Count > 0)
-            {
-                //qNodes.Dequeue().Value
-                V current = qNodes.Dequeue().Value;
+                bst = (BST<KeyValue<K,V>>)oDataArray[iCurrentLocation];
+                // Call find on the bst to see if the data we are adding already exists.
+                // We do not want to add duplicate data.
+                IterateTree(bst);
                 
-                if(current.CompareTo(vValue) != 0)
+                while (qNodes.Count > 0)
                 {
-                    bst.Add(kvNew);
+                    K current = qNodes.Dequeue().Key;
+
+                    if (current.CompareTo(key) != 0)
+                    {
+                        bst.Add(kvNew);
+                    }
                 }
             }
+            else if (oDataArray[iCurrentLocation] == null)
+            {
+                bst = new BST<KeyValue<K, V>>();
 
-            //if(bst.Find(kvNew).Value.CompareTo(vValue) != 0)
-            //{
-            //    bst.Add(kvNew);
-            //}
+                bst.Add(kvNew);
+
+                oDataArray[iCurrentLocation] = bst;
+            }
         }
 
         private void ExpandHashTable()
@@ -168,26 +167,69 @@ namespace HashTables
             }
         }
 
+        //Cuong's
+        //public override string ToString()
+        //{
+        //    object[] currDataArray = oDataArray;
+
+        //    StringBuilder htString = new StringBuilder("[");
+
+        //    //loop through hash table and check each hash
+        //    for (int i = 0; i < currDataArray.Length; i++)
+        //    {
+        //        if (currDataArray[i] != null)
+        //        {
+        //            IterateTree((BST<KeyValue<K, V>>)currDataArray[i]);
+
+        //            StringBuilder bstString = new StringBuilder("[");
+
+        //            bstString.Append("(" + qNodes.Dequeue() + "), ");
+
+        //            bstString.Append("]\n");
+        //        }
+        //        else if (currDataArray[i] == new Tombstone())
+        //        {
+        //            htString.Append("Tombstone\n");
+        //        }
+        //        else
+        //        {
+        //            htString.Append("null\n");
+        //        }
+        //    }
+
+        //    if (Count > 0)
+        //    {
+        //        htString.Remove((htString.Length - 2), (2));
+        //    }
+
+        //    htString.Append("]");
+
+        //    return htString.ToString();
+        //}
+
+        //Luke's
         public override string ToString()
         {
             object[] currDataArray = oDataArray;
 
             StringBuilder result = new StringBuilder();
 
-            for(int i = 0; i < currDataArray.Length; i++)
+            for (int i = 0; i < currDataArray.Length; i++)
             {
-                IterateTree((BST<KeyValue<K,V>>) currDataArray[i]);
-
                 if (currDataArray[i] != null)
                 {
+                    IterateTree((BST<KeyValue<K, V>>)currDataArray[i]);
+
                     result.Append("[");
-                    while(qNodes.Count > 0)
+                    while (qNodes.Count > 0)
                     {
-                        result.Append(qNodes.Dequeue() + ", ");
+                        KeyValue<K, V> kvString = qNodes.Dequeue();
+
+                        result.Append(kvString.Key + " " + kvString.Value + ", ");
                     }
                     result.Append("]\n");
                 }
-                else if(currDataArray[i] == new Tombstone())
+                else if (currDataArray[i] == new Tombstone())
                 {
                     result.Append("Tombstone\n");
                 }
