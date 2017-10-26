@@ -37,61 +37,72 @@ namespace HashTables
 
             BST<KeyValue<K, V>> bst = null;
 
-            if (oDataArray[iCurrentLocation] != null)
+            if (oDataArray[iCurrentLocation] != null && oDataArray[iCurrentLocation].GetType() == typeof(BST<KeyValue<K,V>>))
             {
                 bst = (BST<KeyValue<K,V>>)oDataArray[iCurrentLocation];
                 // Call find on the bst to see if the data we are adding already exists.
                 // We do not want to add duplicate data.
                 IterateTree(bst);
-                
-                while (qNodes.Count > 0)
+
+                while(qNodes.Count > 0)
                 {
                     K current = qNodes.Dequeue().Key;
 
-                    if (current.CompareTo(key) != 0)
+                    // added "qNodes.Count == 0"
+                    if (current.CompareTo(key) != 0 && qNodes.Count == 0)
                     {
+                        iCount++;
                         bst.Add(kvNew);
                     }
                 }
             }
-            else if (oDataArray[iCurrentLocation] == null)
+            // removed "else if (oDataArray[iCurrentLocation] == null)"
+            // should catch Tombstones
+            else
             {
                 bst = new BST<KeyValue<K, V>>();
 
+                iCount++;
                 bst.Add(kvNew);
 
                 oDataArray[iCurrentLocation] = bst;
             }
-        }
 
-        private void ExpandHashTable()
-        {
-            // Create a reference to the existing HashTable
-            object[] oOldArray = oDataArray;
-
-            // Create a new array length of old array times 2
-            oDataArray = new object[oDataArray.Length * 2];
-
-            // Reset the attributes
-            iCount = 0;
-            iNumCollisions = 0;
-
-            // Loop through the existing tabel and re-hash each line
-            for (int i = 0; i < oOldArray.Length; i++)
+            if((iCount / (double)HTSize) > dLoadfactor)
             {
-                if (oOldArray[i] != null)
-                {
-                    // If the current value is a key-value (and not a tombstone).
-                    // Use get GetType() when dealing with an instance of something
-                    if (oOldArray[i].GetType() == typeof(KeyValue<K, V>))
-                    {
-                        // Get a reference to the current key-value
-                        KeyValue<K, V> kv = (KeyValue<K, V>)oOldArray[i];
-                        this.Add(kv.Key, kv.Value);
-                    }
-                }
+                //ExpandHashTable();
             }
         }
+
+        //private void ExpandHashTable()
+        //{
+        //    // Create a reference to the existing HashTable
+        //    object[] oOldArray = oDataArray;
+
+        //    // Create a new array length of old array times 2
+        //    oDataArray = new object[oDataArray.Length * 2];
+
+        //    // Reset the attributes
+        //    iCount = 0;
+        //    iNumCollisions = 0;
+
+        //    // Loop through the existing tabel and re-hash each line
+        //    for (int i = 0; i < oOldArray.Length; i++)
+        //    {
+        //        if (oOldArray[i] != null)
+        //        {
+        //            // If the current value is a key-value (and not a tombstone).
+        //            // Use get GetType() when dealing with an instance of something
+        //            if (oOldArray[i].GetType() == typeof(BST<KeyValue<K, V>>))
+        //            {
+
+        //                // Get a reference to the current key-value
+        //                KeyValue<K, V> kv = (KeyValue<K, V>)oOldArray[i];
+        //                this.Add(kv.Key, kv.Value);
+        //            }
+        //        }
+        //    }
+        //}
 
         protected void IterateTree(BST<KeyValue<K,V>> bst)
         {
@@ -123,6 +134,16 @@ namespace HashTables
 
             IterateTree(bst);
 
+            while(qNodes.Count > 0)
+            {
+                KeyValue<K,V> current = qNodes.Dequeue();
+
+                if(current.Key.CompareTo(key) == 0)
+                {
+                    result = current.Value;
+                }
+            }
+
             for(int i = 0; i < qNodes.Count; i++)
             {
                 KeyValue<K, V> current = qNodes.Dequeue();
@@ -131,6 +152,11 @@ namespace HashTables
                 {
                     result = current.Value;
                 }
+            }
+
+            if(result == null)
+            {
+                throw new KeyNotFoundException("Key not found");
             }
 
             return result;
@@ -155,13 +181,14 @@ namespace HashTables
             // planning on having this loop through every node in the bst, to try and remove the node
             BST<KeyValue<K, V>> bst = (BST<KeyValue<K, V>>)oDataArray[iCurrentLocation];
 
-            V value =  this.Get(key);
+            //Console.WriteLine(Get(key));
+            V value = Get(key);
 
             KeyValue<K, V> kvNew = new KeyValue<K, V>(key, value);
 
             IterateTree(bst);
 
-            if (qNodes.Count == 1 && bst.Remove(kvNew))
+            if (bst.Remove(kvNew) && qNodes.Count == 1)
             {
                 oDataArray[iCurrentLocation] = new Tombstone();
             }
@@ -216,7 +243,7 @@ namespace HashTables
 
             for (int i = 0; i < currDataArray.Length; i++)
             {
-                if (currDataArray[i] != null)
+                if (currDataArray[i] != null && currDataArray[i].GetType() == typeof(BST<KeyValue<K,V>>))
                 {
                     IterateTree((BST<KeyValue<K, V>>)currDataArray[i]);
 
@@ -229,7 +256,7 @@ namespace HashTables
                     }
                     result.Append("]\n");
                 }
-                else if (currDataArray[i] == new Tombstone())
+                else if (currDataArray[i] != null && currDataArray[i].GetType() == typeof(Tombstone))
                 {
                     result.Append("Tombstone\n");
                 }

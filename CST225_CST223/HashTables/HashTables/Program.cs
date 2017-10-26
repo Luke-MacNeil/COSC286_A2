@@ -59,6 +59,7 @@ namespace HashTables
             try
             {
                 ht.Remove(11);
+                ht.Remove(9);
                 //ht.Remove(33);
             }
             catch(KeyNotFoundException knfe)
@@ -71,8 +72,8 @@ namespace HashTables
         {
             try
             {
-                Console.WriteLine(ht.Get(23));
-                Console.WriteLine(ht.Get(33));
+                Console.WriteLine(ht.Get(25));
+                //Console.WriteLine(ht.Get(33));
             }
             catch (KeyNotFoundException knfe)
             {
@@ -136,6 +137,8 @@ namespace HashTables
             ChainingHT<int, string> cht = new ChainingHT<int, string>();
 
             TestAdd(cht);
+            //TestGet(cht);
+            TestRemove(cht);
             Console.WriteLine(cht.ToString());
 
 
