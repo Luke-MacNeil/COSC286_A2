@@ -9,34 +9,32 @@ namespace HashTables
 {
     class Program
     {
-        //public void TestChainingHT()
-        //{
-        //    //Test the AVL Tree
-        //    long start;
-        //    long end;
-        //    AVLT<int> balanceTree = new AVLT<int>();
-        //    //BST<int> balanceTree = new BST<int>();
-        //    start = Environment.TickCount;
-        //    Random randomNumber = new Random((int)start);
-        //    int iMax = 10000;
-        //    int iLargest = iMax * 10;
+        static void TestChainingHT(ChainingHT<int, string> cht)
+        {
+            //Test the ChainingHT by addeding 100000 elements to the table
+            long start;
+            long end;
+            //BST<int> balanceTree = new BST<int>();
+            start = Environment.TickCount;
+            Random randomNumber = new Random((int)start);
+            int iMax = 100000;
+            int iLargest = iMax * 10;
 
-        //    for (int i = 0; i < iMax; i++)
-        //    {
-        //        balanceTree.Add(randomNumber.Next(1, iLargest));
-        //    }
-        //    end = Environment.TickCount;
+            for (int i = 0; i < iMax; i++)
+            {
+                cht.Add(randomNumber.Next(i, iLargest), "test");
+            }
+            end = Environment.TickCount;
 
-        //    Console.WriteLine("Time to add: " + (end - start).ToString() + " ms");
-        //    Console.WriteLine("Theoretical Minimum Height: " + Math.Truncate(Math.Log(iMax, 2.0)));
-        //    Console.WriteLine("Actual Height: " + balanceTree.Height());
-        //}
-
+            Console.WriteLine("Time to add: " + (end - start).ToString() + " ms");
+        }
 
         static void TestAdd(A_HashTable<int, string> ht)
         {
             ht.Add(11, "Rob");
             ht.Add(15, "Grace");
+
+            // shouldn't add "John" he has a dplicate key
             ht.Add(15, "John");
             ht.Add(20, "Luke");
             ht.Add(25, "Cuong");
@@ -58,9 +56,19 @@ namespace HashTables
         {
             try
             {
+                // remove "Rob" (become tombstone)
                 ht.Remove(11);
+
+                // remove "Austin"  (become tombstone)
                 ht.Remove(9);
-                //ht.Remove(33);
+
+                // uncomment this line if you want to see the Tombstone left by 
+                //  "Rob" be replaced by a new BST with "Test1" inside it.
+
+                //ht.Add(11, "Test1");
+
+                // remove a key that doesn't exist (will return an error)
+                ht.Remove(33);
             }
             catch(KeyNotFoundException knfe)
             {
@@ -72,8 +80,11 @@ namespace HashTables
         {
             try
             {
+                // find "Cuong"
                 Console.WriteLine(ht.Get(25));
-                //Console.WriteLine(ht.Get(33));
+
+                // attempt to get a key that doesn't exist in the hash table
+                Console.WriteLine(ht.Get(33));
             }
             catch (KeyNotFoundException knfe)
             {
@@ -136,10 +147,13 @@ namespace HashTables
 
             ChainingHT<int, string> cht = new ChainingHT<int, string>();
 
-            TestAdd(cht);
+            // right now the Add() method also handles expanding,
+            //  this is fine since we know that both Add() works, and ExpandHashtable() works
+            //TestAdd(cht);
             //TestGet(cht);
-            TestRemove(cht);
-            Console.WriteLine(cht.ToString());
+            //TestRemove(cht);
+            TestChainingHT(cht);
+            //Console.WriteLine(cht.ToString());
 
 
 
